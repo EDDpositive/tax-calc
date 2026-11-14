@@ -10,6 +10,7 @@
 <meta property="og:title" content="해외주식 양도세 계산기 · 250만 원 비과세로 몇 주까지 팔 수 있나">
 <meta property="og:description" content="미국주식·ETF 양도세를 거래별 환율로 계산하고, 올해 남은 250만 원 한도 안에서 세금 없이 팔 수 있는 수량을 알려 주는 무료 계산기.">
 <meta property="og:url" content="https://eddpositive.github.io/tax-calc/">
+<script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "해외주식 양도소득세는 어떻게 계산하나요?", "acceptedAnswer": {"@type": "Answer", "text": "그해 모든 해외주식 양도차익(판 금액 − 산 금액 − 수수료, 각각 거래일 환율로 원화 환산)을 합친 뒤 250만 원을 빼고 22%(국세 20% + 지방소득세 2%)를 곱합니다."}}, {"@type": "Question", "name": "250만 원까지 세금 없이 몇 주를 팔 수 있나요?", "acceptedAnswer": {"@type": "Answer", "text": "1주당 원화 이익으로 올해 남은 비과세 한도를 나누면 됩니다. 이 계산기의 '비과세로 몇 주까지?' 탭에서 종목을 고르면 전날 종가와 환율로 바로 계산합니다."}}, {"@type": "Question", "name": "회사에서 받은 해외 자사주(RSU)를 팔아도 250만 원 공제를 따로 받나요?", "acceptedAnswer": {"@type": "Answer", "text": "아니요. 250만 원 공제는 사람마다 1년에 한 번이라 해외 자사주와 다른 해외주식 이익을 합쳐서 씁니다."}}, {"@type": "Question", "name": "연말에 팔면 어느 해 이익으로 잡히나요?", "acceptedAnswer": {"@type": "Answer", "text": "해외주식은 매도 대금이 결제되는 날을 기준으로 양도한 해가 정해집니다. 연말에 공제를 채우려면 결제일이 그해 안에 끝나도록 마지막 거래일보다 며칠 앞서 파는 것이 안전하고, 정확한 날짜는 증권사 공지로 확인하세요."}}, {"@type": "Question", "name": "양도세 신고는 언제 하나요?", "acceptedAnswer": {"@type": "Answer", "text": "판 다음 해 5월에 신고합니다."}}]}</script>
 <style>
 :root{--bg:#f7f7f4;--ink:#18191b;--sub:#626670;--line:#e1e2dd;--card:#fff;--acc:#1f4fd1;--acc2:#e9eefc;--ok:#1d7a4b;--okbg:#e7f4ec}
 *{box-sizing:border-box}
@@ -57,7 +58,7 @@ footer{font-size:12px;color:var(--sub);margin-top:28px}
 <div class="wrap">
 <header>
   <h1>해외주식 양도세 계산기</h1>
-  <p class="lead">미국주식·해외 ETF를 팔았거나 팔 계획이라면, 거래별 환율로 세금을 계산하고 올해 남은 250만 원 비과세 한도 안에서 몇 주까지 팔 수 있는지 확인하세요. 종목은 한글로도 찾을 수 있어요.</p>
+  <p class="lead">미국주식·해외 ETF·해외 자사주(RSU)를 팔았거나 팔 계획이라면, 거래별 환율로 세금을 계산하고 올해 남은 250만 원 비과세 한도 안에서 몇 주까지 팔 수 있는지 확인하세요. 종목은 한글로도 찾을 수 있어요.</p>
   <div class="status" id="status">가격 정보를 불러오는 중…</div>
 </header>
 
@@ -112,6 +113,13 @@ footer{font-size:12px;color:var(--sub);margin-top:28px}
   <p><b>250만 원 공제</b>는 사람마다 1년에 한 번이고, 종목 수나 증권사 수와 상관없이 합쳐서 씁니다. 회사에서 받은 해외 자사주를 판 이익도 여기에 같이 들어갑니다.</p>
   <p><b>손실</b>은 같은 해 다른 해외주식 이익과 상계됩니다. 다음 해로 넘길 수는 없습니다.</p>
   <p><b>신고</b>는 판 다음 해 5월에 합니다.</p>
+</div>
+
+<h2>연말 전 절세 체크 (12월에 꼭 보세요)</h2>
+<div class="card faq">
+  <p><b>올해 이익이 250만 원보다 적다면</b>: 남은 한도만큼 이익 난 종목을 팔았다가 다시 사면, 다음 해에 팔 때 취득가가 올라가 세금이 줄어듭니다. "비과세로 몇 주까지?" 탭에서 수량을 확인하세요. 거래 수수료와 환전 비용은 따로 듭니다.</p>
+  <p><b>이미 250만 원을 넘었다면</b>: 손실 중인 종목을 연내에 팔면 이익과 상계되어 세금이 줄어듭니다.</p>
+  <p><b>날짜</b>: 해외주식은 결제일 기준으로 그해 양도가 결정됩니다. 마지막 거래일에 팔면 다음 해로 넘어갈 수 있으니 증권사의 연말 결제일 공지를 먼저 확인하세요.</p>
 </div>
 
 <h2>자주 묻는 질문</h2>
