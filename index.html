@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>파티룸·스터디룸 손님 안내문 생성기 (무료) · 예약 확정·전날·퇴실·후기 문자</title>
+<meta name="description" content="공간대여 사장님용 무료 도구. 주소·출입 방법·주의사항만 넣으면 예약 확정, 전날 리마인드, 퇴실 안내, 후기 요청 문자 4종을 바로 만들어 복사할 수 있습니다.">
+<style>
+:root{--bg:#f6f4ef;--ink:#1d1b18;--sub:#6b665d;--line:#e2ddd2;--card:#fff;--acc:#2f5d50;--acc2:#e8f0ec}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 18px 48px}
+header{padding:40px 0 18px}
+h1{font-size:clamp(24px,4.4vw,34px);line-height:1.25;margin:0 0 8px;letter-spacing:-.02em}
+.lead{color:var(--sub);margin:0}
+.grid{display:grid;gap:16px}
+@media(min-width:860px){.grid{grid-template-columns:380px 1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
+label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
+label:first-child{margin-top:0}
+input,textarea,select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+textarea{min-height:64px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.msg{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;background:#fff}
+.msg h3{margin:0 0 4px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
+.msg .when{font-size:12px;color:var(--sub);font-weight:500}
+.msg pre{white-space:pre-wrap;font:inherit;font-size:14px;margin:8px 0 0;background:#f9f8f5;border-radius:10px;padding:12px}
+button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:7px 12px;font-weight:700;background:var(--acc);color:#fff;font-size:13px}
+button.done{background:var(--acc2);color:var(--acc)}
+.tip{font-size:13px;color:var(--sub);margin:6px 0 0}
+h2{font-size:19px;margin:28px 0 8px}
+.faq p{margin:4px 0 14px}
+footer{font-size:12px;color:var(--sub);margin-top:24px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>손님 안내문 생성기</h1>
+  <p class="lead">파티룸·스터디룸·연습실·스튜디오 사장님용 무료 도구예요. 아래 칸만 채우면 예약 확정부터 후기 요청까지 문자 4종이 바로 만들어집니다. 복사해서 카톡이나 문자로 보내세요.</p>
+</header>
+
+<div class="grid">
+  <div class="card">
+    <label>공간 이름</label><input id="name" value="성수 루프탑 파티룸">
+    <label>주소 (층·호수까지)</label><input id="addr" value="서울 성동구 OO로 12, 5층">
+    <label>찾아오는 길 한 줄</label><input id="way" value="성수역 3번 출구에서 도보 5분, 1층 편의점 옆 입구">
+    <div class="row">
+      <div><label>출입 방법</label><select id="entry"><option>도어락 비밀번호</option><option>스마트락 링크</option><option>키박스</option></select></div>
+      <div><label>비밀번호·링크 자리</label><input id="code" value="[예약마다 변경]"></div>
+    </div>
+    <div class="row">
+      <div><label>와이파이</label><input id="wifi" value="Rooftop_5G / 12345678"></div>
+      <div><label>주차</label><input id="park" value="주차 불가, 근처 공영주차장 이용"></div>
+    </div>
+    <label>꼭 지켜 주실 것 (줄마다 하나)</label>
+    <textarea id="rules">밤 10시 이후 음악 소리 줄이기
+실내 흡연 금지
+음식물 쓰레기는 주방 통에</textarea>
+    <label>퇴실 때 할 일 (줄마다 하나)</label>
+    <textarea id="out">조명·에어컨 끄기
+쓰레기 분리해서 현관 앞에
+문 닫히는 소리 확인</textarea>
+    <div class="row">
+      <div><label>문의 연락처</label><input id="tel" value="010-0000-0000 (문자)"></div>
+      <div><label>후기 남길 곳</label><select id="rv"><option>스페이스클라우드</option><option>네이버 예약</option><option>카카오맵</option></select></div>
+    </div>
+    <p class="tip">입력한 내용은 이 기기에서만 쓰이고 어디에도 저장되지 않아요.</p>
+  </div>
+
+  <div id="out_msgs"></div>
+</div>
+
+<h2>보내는 시점 추천</h2>
+<div class="card faq">
+  <p><b>예약 확정</b>: 예약이 확정되자마자. 늦을수록 "예약 된 거 맞나요?" 문의가 늘어요.</p>
+  <p><b>전날 리마인드</b>: 이용 전날 저녁 7시쯤. 길 안내와 출입 방법을 한 번 더 보내면 당일 전화가 줄어요.</p>
+  <p><b>퇴실 안내</b>: 퇴실 30분 전. 체크리스트를 미리 받으면 정리 상태가 확실히 좋아져요.</p>
+  <p><b>후기 요청</b>: 퇴실 2시간 뒤. 기억이 생생할 때 부탁해야 남겨 줍니다.</p>
+  <p><b>비밀번호</b>는 예약마다 바꾸는 게 안전해요. 고정 비밀번호를 쓴다면 전날 리마인드에만 넣으세요.</p>
+</div>
+
+<footer>공간대여 사장님을 위한 무료 도구입니다. 매주 소상공인 지원금 공고를 정리한 무료 소식은 카카오톡 오픈채팅 "사장님 지원금 레이더"에서 받아 보실 수 있어요.</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const lines=v=>v.split('\n').map(s=>s.trim()).filter(Boolean);
+function build(){
+  const n=$('name').value.trim()||'공간',a=$('addr').value.trim(),w=$('way').value.trim(),e=$('entry').value,c=$('code').value.trim(),wf=$('wifi').value.trim(),p=$('park').value.trim(),t=$('tel').value.trim(),rv=$('rv').value;
+  const R=lines($('rules').value),O=lines($('out').value);
+  const entryLine=e==='스마트락 링크'?`출입 링크: ${c}`:e==='키박스'?`키박스 번호: ${c}`:`출입 비밀번호: ${c}`;
+  const msgs=[
+    {t:'예약 확정',when:'확정 즉시',body:`안녕하세요, ${n}입니다. 예약이 확정됐어요.\n\n이용 일시: [날짜] [시작]~[끝]\n주소: ${a}\n${w?`오시는 길: ${w}\n`:''}${p?`주차: ${p}\n`:''}\n출입 방법은 이용 전날 저녁에 따로 보내 드릴게요.${R.length?`\n\n꼭 지켜 주세요\n${R.map(r=>'- '+r).join('\n')}`:''}\n\n문의: ${t}`},
+    {t:'전날 리마인드',when:'전날 저녁 7시',body:`내일 ${n} 이용 안내드려요.\n\n이용 시간: [시작]~[끝]\n주소: ${a}\n${w?`오시는 길: ${w}\n`:''}${entryLine}\n${wf?`와이파이: ${wf}\n`:''}\n입실 시간 전에는 문이 열리지 않아요. 궁금한 점은 ${t}로 연락 주세요.`},
+    {t:'퇴실 안내',when:'퇴실 30분 전',body:`즐거운 시간 보내고 계신가요? 30분 뒤 퇴실이에요.${O.length?`\n\n나가실 때 부탁드려요\n${O.map(o=>'- '+o).join('\n')}`:''}\n\n두고 가신 물건은 ${t}로 알려 주시면 보관해 둘게요.`},
+    {t:'후기 요청',when:'퇴실 2시간 뒤',body:`오늘 ${n}을 이용해 주셔서 감사해요.\n불편했던 점이 있었다면 이 문자로 바로 알려 주세요. 다음 손님부터 고치겠습니다.\n\n괜찮으셨다면 ${rv}에 짧은 후기 하나 남겨 주시면 저희 같은 작은 공간에 정말 큰 힘이 돼요.`}
+  ];
+  const box=$('out_msgs');box.innerHTML='';
+  msgs.forEach(m=>{
+    const d=document.createElement('div');d.className='msg';
+    const h=document.createElement('h3');
+    const s=document.createElement('span');s.innerHTML=`${m.t} <span class="when">· ${m.when}</span>`;
+    const b=document.createElement('button');b.textContent='복사';
+    b.onclick=()=>{const done=()=>{b.textContent='복사됨';b.classList.add('done');setTimeout(()=>{b.textContent='복사';b.classList.remove('done')},1500)};
+      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(m.body).then(done,()=>sel(pre))}else sel(pre)};
+    h.append(s,b);
+    const pre=document.createElement('pre');pre.textContent=m.body;
+    d.append(h,pre);box.appendChild(d);
+  });
+}
+function sel(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}
+document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',build));
+build();
+</script>
+</body>
+</html>
