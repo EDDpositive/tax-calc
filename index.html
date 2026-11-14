@@ -65,6 +65,7 @@ footer{font-size:12px;color:var(--sub);margin-top:28px}
   <div class="card">
     <div id="trades"></div>
     <button class="add" id="addT">+ 거래 추가</button>
+    <button class="x" id="reset" style="margin-top:8px">입력 전부 지우기</button>
     <p class="note" style="margin-top:10px">날짜를 넣으면 그날 환율이 자동으로 채워져요. 손실 난 거래도 넣으세요. 같은 해의 해외주식 손익은 서로 합쳐서 계산합니다.</p>
   </div>
   <div class="card res">
@@ -116,7 +117,7 @@ footer{font-size:12px;color:var(--sub);margin-top:28px}
   <p><b>배당금도 여기에 들어가나요?</b><br>아니요. 배당은 양도소득이 아니라 배당소득이라 따로 과세됩니다.</p>
 </div>
 
-<footer>이 계산기는 일반적인 세법 기준으로 만든 참고용이며 세무 상담을 대신하지 않습니다. 실제 신고 전에는 증권사 양도세 신고 대행 자료나 세무사로 확인하세요. 입력한 값은 이 기기에서만 계산되고 어디에도 저장되지 않습니다.</footer>
+<footer>이 계산기는 일반적인 세법 기준으로 만든 참고용이며 세무 상담을 대신하지 않습니다. 실제 신고 전에는 증권사 양도세 신고 대행 자료나 세무사로 확인하세요. 입력한 값은 이 기기 브라우저에만 저장되고 어디로도 보내지지 않습니다. 다음에 열면 그대로 이어서 쓸 수 있어요.</footer>
 </div>
 
 <script>
@@ -156,7 +157,12 @@ const nameOf=t=>{const f=TK.find(x=>x[0]===t.toUpperCase());return f?f[1]:''};
 const priceOf=t=>{const p=PX.prices[(t||'').toUpperCase()];return p?p.close:null};
 
 /* 탭 A: 거래 목록 */
-let trades=[{name:'SPYM',q:10,bd:'',b:80,bfx:1300,sd:'',s:95,sfx:1330,fee:5000}];
+const SK='taxcalc_v1';
+let saved=null;try{saved=JSON.parse(localStorage.getItem(SK)||'null')}catch(e){}
+let trades=(saved&&saved.trades&&saved.trades.length)?saved.trades:[{name:'SPYM',q:10,bd:'',b:80,bfx:1300,sd:'',s:95,sfx:1330,fee:5000}];
+const BKEYS=['bTk','bQty','bBuy','bBfx','bFee','bNow','bNfx','bDone'];
+function persist(){const b={};BKEYS.forEach(k=>b[k]=$(k).value);try{localStorage.setItem(SK,JSON.stringify({trades,b}))}catch(e){}}
+if(saved&&saved.b)BKEYS.forEach(k=>{if(saved.b[k]!=null)$(k).value=saved.b[k]});
 function tradeHTML(t,i){
   return `<div class="trade"><div class="trow"><b>거래 ${i+1}</b>${trades.length>1?`<button class="x" data-del="${i}">삭제</button>`:''}</div>
   <div class="g g4">
@@ -194,6 +200,7 @@ function calcA(){
   $('rTax').textContent=won(t1+t2);
   const left=DED-gain,el=$('rLeft');
   if(left>0){el.hidden=false;el.textContent=`세금 0원. 올해 비과세 한도가 ${won(left)} 남았습니다.`}else el.hidden=true;
+  persist();
 }
 $('addT').onclick=()=>{trades.push({name:'',q:0,bd:'',b:0,bfx:PX.usdkrw?Math.round(PX.usdkrw*10)/10:1330,sd:'',s:0,sfx:PX.usdkrw?Math.round(PX.usdkrw*10)/10:1330,fee:0});renderTrades()};
 
@@ -208,7 +215,7 @@ function calcB(){
   if(per<=0){max=qty;msg='지금 팔면 1주당 손실이라 세금이 생기지 않습니다. 손실은 올해 다른 해외주식 이익과 상계됩니다.'}
   else if(left<=0){max=0;msg='올해 비과세 한도를 이미 다 썼습니다. 더 팔면 이익의 22%가 세금입니다.'}
   else{max=Math.min(qty,Math.floor(left/per));msg=max>=qty?'보유 수량을 전부 팔아도 한도 안입니다.':`${max}주까지 팔면 세금 0원, ${max+1}주부터 초과분에 22%가 붙습니다.`}
-  $('sMax').textContent=max.toLocaleString('ko-KR')+'주';$('sMsg').textContent=msg+' 평균 단가로 계산한 근사치입니다.';
+  $('sMax').textContent=max.toLocaleString('ko-KR')+'주';persist();$('sMsg').textContent=msg+' 평균 단가로 계산한 근사치입니다.';
 }
 document.querySelectorAll('#tb input').forEach(el=>{if(el.id!=='bTk')el.addEventListener('input',calcB)});
 
@@ -216,6 +223,7 @@ document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
   $('ta').hidden=b.dataset.t!=='a';$('tb').hidden=b.dataset.t!=='b';
 });
+$('reset').onclick=()=>{try{localStorage.removeItem(SK)}catch(e){}location.reload()};
 renderTrades();calcB();
 </script>
 </body>
