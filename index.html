@@ -3,115 +3,220 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>파티룸·스터디룸 손님 안내문 생성기 (무료) · 예약 확정·전날·퇴실·후기 문자</title>
-<meta name="description" content="공간대여 사장님용 무료 도구. 주소·출입 방법·주의사항만 넣으면 예약 확정, 전날 리마인드, 퇴실 안내, 후기 요청 문자 4종을 바로 만들어 복사할 수 있습니다.">
+<title>해외주식 양도세 계산기 · 250만 원 비과세 한도로 몇 주까지 팔 수 있나</title>
+<meta name="description" content="미국주식·해외 ETF 양도소득세를 거래별 환율로 계산하고, 올해 남은 250만 원 기본공제 안에서 세금 없이 팔 수 있는 수량을 알려 주는 무료 계산기. 종목 검색, 전날 종가·환율 자동 입력.">
 <style>
-:root{--bg:#f6f4ef;--ink:#1d1b18;--sub:#6b665d;--line:#e2ddd2;--card:#fff;--acc:#2f5d50;--acc2:#e8f0ec}
+:root{--bg:#f7f7f4;--ink:#18191b;--sub:#626670;--line:#e1e2dd;--card:#fff;--acc:#1f4fd1;--acc2:#e9eefc;--ok:#1d7a4b;--okbg:#e7f4ec}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:980px;margin:0 auto;padding:0 18px 48px}
-header{padding:40px 0 18px}
+.wrap{max-width:860px;margin:0 auto;padding:0 18px 48px}
+header{padding:40px 0 16px}
 h1{font-size:clamp(24px,4.4vw,34px);line-height:1.25;margin:0 0 8px;letter-spacing:-.02em}
 .lead{color:var(--sub);margin:0}
-.grid{display:grid;gap:16px}
-@media(min-width:860px){.grid{grid-template-columns:380px 1fr}}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px}
-label{display:block;font-size:13px;color:var(--sub);margin:12px 0 4px}
-label:first-child{margin-top:0}
-input,textarea,select{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
-textarea{min-height:64px;resize:vertical}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.msg{border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px;background:#fff}
-.msg h3{margin:0 0 4px;font-size:15px;display:flex;justify-content:space-between;align-items:center}
-.msg .when{font-size:12px;color:var(--sub);font-weight:500}
-.msg pre{white-space:pre-wrap;font:inherit;font-size:14px;margin:8px 0 0;background:#f9f8f5;border-radius:10px;padding:12px}
-button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:7px 12px;font-weight:700;background:var(--acc);color:#fff;font-size:13px}
-button.done{background:var(--acc2);color:var(--acc)}
-.tip{font-size:13px;color:var(--sub);margin:6px 0 0}
+.status{font-size:12px;color:var(--sub);margin-top:8px}
+.tabs{display:flex;gap:8px;margin:22px 0 14px}
+.tab{flex:1;border:1px solid var(--line);background:#fff;border-radius:12px;padding:12px;font:inherit;font-weight:700;cursor:pointer;color:var(--sub)}
+.tab.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--sub);margin:0 0 4px}
+input{width:100%;padding:10px 11px;border:1px solid var(--line);border-radius:10px;font:inherit;background:#fff}
+.g{display:grid;gap:10px;grid-template-columns:repeat(2,1fr)}
+@media(min-width:700px){.g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}}
+.span2{grid-column:span 2}
+.trade{border-top:1px dashed var(--line);padding-top:12px;margin-top:12px}
+.trade:first-child{border-top:0;margin-top:0;padding-top:0}
+.trow{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.trow b{font-size:14px}
+.x{border:0;background:none;color:var(--sub);cursor:pointer;font:inherit;font-size:13px}
+.add{margin-top:12px;border:1px dashed var(--acc);background:var(--acc2);color:var(--acc);border-radius:10px;padding:10px;width:100%;font:inherit;font-weight:700;cursor:pointer}
+.ac{position:relative}
+.ac ul{position:absolute;z-index:20;left:0;right:0;top:100%;margin:4px 0 0;padding:4px;list-style:none;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.08);max-height:240px;overflow:auto}
+.ac li{padding:8px 10px;border-radius:8px;cursor:pointer;font-size:14px}
+.ac li:hover,.ac li.on{background:var(--acc2)}
+.ac li small{color:var(--sub);margin-left:6px}
+.hint{font-size:12px;color:var(--sub);margin-top:3px;min-height:16px}
+.res{display:grid;gap:8px}
+.line{display:flex;justify-content:space-between;font-size:15px}
+.line span:first-child{color:var(--sub)}
+.big{font-size:30px;font-weight:800;letter-spacing:-.02em}
+.note{font-size:13px;color:var(--sub)}
+.ok{background:var(--okbg);color:var(--ok);border-radius:12px;padding:12px 14px;font-weight:700}
 h2{font-size:19px;margin:28px 0 8px}
-.faq p{margin:4px 0 14px}
-footer{font-size:12px;color:var(--sub);margin-top:24px}
+.faq p{margin:4px 0 14px;color:#33363c}
+footer{font-size:12px;color:var(--sub);margin-top:28px}
+[hidden]{display:none!important}
 </style>
+<script src="tickers.js"></script>
 </head>
 <body>
 <div class="wrap">
 <header>
-  <h1>손님 안내문 생성기</h1>
-  <p class="lead">파티룸·스터디룸·연습실·스튜디오 사장님용 무료 도구예요. 아래 칸만 채우면 예약 확정부터 후기 요청까지 문자 4종이 바로 만들어집니다. 복사해서 카톡이나 문자로 보내세요.</p>
+  <h1>해외주식 양도세 계산기</h1>
+  <p class="lead">미국주식·해외 ETF를 팔았거나 팔 계획이라면, 거래별 환율로 세금을 계산하고 올해 남은 250만 원 비과세 한도 안에서 몇 주까지 팔 수 있는지 확인하세요. 종목은 한글로도 찾을 수 있어요.</p>
+  <div class="status" id="status">가격 정보를 불러오는 중…</div>
 </header>
 
-<div class="grid">
+<div class="tabs">
+  <button class="tab on" data-t="a">올해 세금 계산</button>
+  <button class="tab" data-t="b">비과세로 몇 주까지?</button>
+</div>
+
+<section id="ta">
   <div class="card">
-    <label>공간 이름</label><input id="name" value="성수 루프탑 파티룸">
-    <label>주소 (층·호수까지)</label><input id="addr" value="서울 성동구 OO로 12, 5층">
-    <label>찾아오는 길 한 줄</label><input id="way" value="성수역 3번 출구에서 도보 5분, 1층 편의점 옆 입구">
-    <div class="row">
-      <div><label>출입 방법</label><select id="entry"><option>도어락 비밀번호</option><option>스마트락 링크</option><option>키박스</option></select></div>
-      <div><label>비밀번호·링크 자리</label><input id="code" value="[예약마다 변경]"></div>
-    </div>
-    <div class="row">
-      <div><label>와이파이</label><input id="wifi" value="Rooftop_5G / 12345678"></div>
-      <div><label>주차</label><input id="park" value="주차 불가, 근처 공영주차장 이용"></div>
-    </div>
-    <label>꼭 지켜 주실 것 (줄마다 하나)</label>
-    <textarea id="rules">밤 10시 이후 음악 소리 줄이기
-실내 흡연 금지
-음식물 쓰레기는 주방 통에</textarea>
-    <label>퇴실 때 할 일 (줄마다 하나)</label>
-    <textarea id="out">조명·에어컨 끄기
-쓰레기 분리해서 현관 앞에
-문 닫히는 소리 확인</textarea>
-    <div class="row">
-      <div><label>문의 연락처</label><input id="tel" value="010-0000-0000 (문자)"></div>
-      <div><label>후기 남길 곳</label><select id="rv"><option>스페이스클라우드</option><option>네이버 예약</option><option>카카오맵</option></select></div>
-    </div>
-    <p class="tip">입력한 내용은 이 기기에서만 쓰이고 어디에도 저장되지 않아요.</p>
+    <div id="trades"></div>
+    <button class="add" id="addT">+ 거래 추가</button>
+    <p class="note" style="margin-top:10px">날짜를 넣으면 그날 환율이 자동으로 채워져요. 손실 난 거래도 넣으세요. 같은 해의 해외주식 손익은 서로 합쳐서 계산합니다.</p>
   </div>
+  <div class="card res">
+    <div class="line"><span>양도차익 합계</span><b id="rGain">0원</b></div>
+    <div class="line"><span>기본공제</span><b>−2,500,000원</b></div>
+    <div class="line"><span>과세표준</span><b id="rBase">0원</b></div>
+    <div class="line"><span>양도소득세 20%</span><b id="rT1">0원</b></div>
+    <div class="line"><span>지방소득세 2%</span><b id="rT2">0원</b></div>
+    <div style="margin-top:6px"><span class="note">내야 할 세금 (다음 해 5월 신고)</span><div class="big" id="rTax">0원</div></div>
+    <div id="rLeft" class="ok" hidden></div>
+  </div>
+</section>
 
-  <div id="out_msgs"></div>
-</div>
+<section id="tb" hidden>
+  <div class="card">
+    <div class="g g3">
+      <div class="span2"><label>종목 (티커나 한글 이름)</label><div class="ac"><input id="bTk" placeholder="예: 테슬라, SPYM" autocomplete="off"><ul hidden></ul></div><div class="hint" id="bHint"></div></div>
+      <div><label>보유 수량 (주)</label><input id="bQty" type="number" value="50"></div>
+      <div><label>평균 매수 단가 (달러)</label><input id="bBuy" type="number" step="0.01" value="80"></div>
+      <div><label>살 때 환율 (원/달러)</label><input id="bBfx" type="number" step="0.1" value="1300"></div>
+      <div><label>수수료율 (%)</label><input id="bFee" type="number" step="0.01" value="0.25"></div>
+      <div><label>지금 가격 (달러)</label><input id="bNow" type="number" step="0.01" value="95"></div>
+      <div><label>지금 환율 (원/달러)</label><input id="bNfx" type="number" step="0.1" value="1330"></div>
+    </div>
+    <div style="margin-top:10px"><label>올해 이미 확정된 해외주식 이익 (원, 손실이면 음수)</label><input id="bDone" type="number" value="0"></div>
+  </div>
+  <div class="card res">
+    <div class="line"><span>1주당 이익 (수수료 뺀 원화)</span><b id="sPer">-</b></div>
+    <div class="line"><span>올해 남은 비과세 한도</span><b id="sLeft">-</b></div>
+    <div style="margin-top:6px"><span class="note">세금 없이 팔 수 있는 수량</span><div class="big" id="sMax">-</div></div>
+    <p class="note" id="sMsg"></p>
+  </div>
+</section>
 
-<h2>보내는 시점 추천</h2>
+<h2>계산 방법</h2>
 <div class="card faq">
-  <p><b>예약 확정</b>: 예약이 확정되자마자. 늦을수록 "예약 된 거 맞나요?" 문의가 늘어요.</p>
-  <p><b>전날 리마인드</b>: 이용 전날 저녁 7시쯤. 길 안내와 출입 방법을 한 번 더 보내면 당일 전화가 줄어요.</p>
-  <p><b>퇴실 안내</b>: 퇴실 30분 전. 체크리스트를 미리 받으면 정리 상태가 확실히 좋아져요.</p>
-  <p><b>후기 요청</b>: 퇴실 2시간 뒤. 기억이 생생할 때 부탁해야 남겨 줍니다.</p>
-  <p><b>비밀번호</b>는 예약마다 바꾸는 게 안전해요. 고정 비밀번호를 쓴다면 전날 리마인드에만 넣으세요.</p>
+  <p><b>양도차익</b> = 판 금액(판 날 환율로 원화) − 산 금액(산 날 환율로 원화) − 수수료 등 필요경비</p>
+  <p><b>세금</b> = (그해 모든 해외주식 양도차익 합계 − 250만 원) × 22%. 국세 20%에 지방소득세 2%가 붙습니다.</p>
+  <p><b>250만 원 공제</b>는 사람마다 1년에 한 번이고, 종목 수나 증권사 수와 상관없이 합쳐서 씁니다. 회사에서 받은 해외 자사주를 판 이익도 여기에 같이 들어갑니다.</p>
+  <p><b>손실</b>은 같은 해 다른 해외주식 이익과 상계됩니다. 다음 해로 넘길 수는 없습니다.</p>
+  <p><b>신고</b>는 판 다음 해 5월에 합니다.</p>
 </div>
 
-<footer>공간대여 사장님을 위한 무료 도구입니다. 매주 소상공인 지원금 공고를 정리한 무료 소식은 카카오톡 오픈채팅 "사장님 지원금 레이더"에서 받아 보실 수 있어요.</footer>
+<h2>자주 묻는 질문</h2>
+<div class="card faq">
+  <p><b>자동으로 채워지는 가격은 언제 기준인가요?</b><br>매일 미국 장이 끝난 뒤 갱신되는 전날 종가예요. 실시간 가격이 아니니 팔기 직전에는 증권사 앱 가격으로 바꿔 넣으세요.</p>
+  <p><b>자동 환율은 정확한가요?</b><br>참고용 공개 환율(유럽중앙은행 고시 기준)이라 신고에 쓰는 서울외국환중개 기준환율과 조금 다를 수 있어요. 신고할 때는 증권사 거래내역의 환율을 쓰세요.</p>
+  <p><b>여러 번 나눠 샀으면요?</b><br>거래마다 한 줄씩 넣으면 가장 정확합니다. 비과세 수량 탭은 평균 단가로 계산한 근사치입니다.</p>
+  <p><b>배당금도 여기에 들어가나요?</b><br>아니요. 배당은 양도소득이 아니라 배당소득이라 따로 과세됩니다.</p>
+</div>
+
+<footer>이 계산기는 일반적인 세법 기준으로 만든 참고용이며 세무 상담을 대신하지 않습니다. 실제 신고 전에는 증권사 양도세 신고 대행 자료나 세무사로 확인하세요. 입력한 값은 이 기기에서만 계산되고 어디에도 저장되지 않습니다.</footer>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-const lines=v=>v.split('\n').map(s=>s.trim()).filter(Boolean);
-function build(){
-  const n=$('name').value.trim()||'공간',a=$('addr').value.trim(),w=$('way').value.trim(),e=$('entry').value,c=$('code').value.trim(),wf=$('wifi').value.trim(),p=$('park').value.trim(),t=$('tel').value.trim(),rv=$('rv').value;
-  const R=lines($('rules').value),O=lines($('out').value);
-  const entryLine=e==='스마트락 링크'?`출입 링크: ${c}`:e==='키박스'?`키박스 번호: ${c}`:`출입 비밀번호: ${c}`;
-  const msgs=[
-    {t:'예약 확정',when:'확정 즉시',body:`안녕하세요, ${n}입니다. 예약이 확정됐어요.\n\n이용 일시: [날짜] [시작]~[끝]\n주소: ${a}\n${w?`오시는 길: ${w}\n`:''}${p?`주차: ${p}\n`:''}\n출입 방법은 이용 전날 저녁에 따로 보내 드릴게요.${R.length?`\n\n꼭 지켜 주세요\n${R.map(r=>'- '+r).join('\n')}`:''}\n\n문의: ${t}`},
-    {t:'전날 리마인드',when:'전날 저녁 7시',body:`내일 ${n} 이용 안내드려요.\n\n이용 시간: [시작]~[끝]\n주소: ${a}\n${w?`오시는 길: ${w}\n`:''}${entryLine}\n${wf?`와이파이: ${wf}\n`:''}\n입실 시간 전에는 문이 열리지 않아요. 궁금한 점은 ${t}로 연락 주세요.`},
-    {t:'퇴실 안내',when:'퇴실 30분 전',body:`즐거운 시간 보내고 계신가요? 30분 뒤 퇴실이에요.${O.length?`\n\n나가실 때 부탁드려요\n${O.map(o=>'- '+o).join('\n')}`:''}\n\n두고 가신 물건은 ${t}로 알려 주시면 보관해 둘게요.`},
-    {t:'후기 요청',when:'퇴실 2시간 뒤',body:`오늘 ${n}을 이용해 주셔서 감사해요.\n불편했던 점이 있었다면 이 문자로 바로 알려 주세요. 다음 손님부터 고치겠습니다.\n\n괜찮으셨다면 ${rv}에 짧은 후기 하나 남겨 주시면 저희 같은 작은 공간에 정말 큰 힘이 돼요.`}
-  ];
-  const box=$('out_msgs');box.innerHTML='';
-  msgs.forEach(m=>{
-    const d=document.createElement('div');d.className='msg';
-    const h=document.createElement('h3');
-    const s=document.createElement('span');s.innerHTML=`${m.t} <span class="when">· ${m.when}</span>`;
-    const b=document.createElement('button');b.textContent='복사';
-    b.onclick=()=>{const done=()=>{b.textContent='복사됨';b.classList.add('done');setTimeout(()=>{b.textContent='복사';b.classList.remove('done')},1500)};
-      if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(m.body).then(done,()=>sel(pre))}else sel(pre)};
-    h.append(s,b);
-    const pre=document.createElement('pre');pre.textContent=m.body;
-    d.append(h,pre);box.appendChild(d);
-  });
+const won=n=>Math.round(n).toLocaleString('ko-KR')+'원';
+const DED=2500000;
+const TK=window.TICKERS||[];
+let PX={prices:{},usdkrw:null,updated:null};
+const fxCache={};
+
+/* 가격 파일 (GitHub Actions가 매일 갱신) */
+fetch('prices.json',{cache:'no-cache'}).then(r=>r.ok?r.json():null).then(j=>{
+  if(j&&j.prices&&Object.keys(j.prices).length){PX=j;const any=Object.values(j.prices)[0];$('status').textContent=`가격 자동 입력: ${any.date||''} 종가 기준${j.usdkrw?` · 환율 ${Math.round(j.usdkrw*10)/10}원`:''}`;}
+  else $('status').textContent='가격 자동 입력은 준비 중이에요. 가격을 직접 넣어 주세요.';
+}).catch(()=>{$('status').textContent='가격 자동 입력을 쓸 수 없어요. 가격을 직접 넣어 주세요.'});
+
+/* 날짜별 환율 (참고용 공개 환율) */
+async function fxOn(date){
+  if(!date)return null;if(fxCache[date])return fxCache[date];
+  try{const r=await fetch(`https://api.frankfurter.app/${date}?from=USD&to=KRW`);if(!r.ok)return null;const j=await r.json();const v=j.rates&&j.rates.KRW;if(v)fxCache[date]=v;return v||null}catch(e){return null}
 }
-function sel(el){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r)}
-document.querySelectorAll('input,textarea,select').forEach(el=>el.addEventListener('input',build));
-build();
+
+/* 종목 검색 드롭다운 */
+function matchTk(q){q=q.trim().toLowerCase();if(!q)return[];return TK.filter(([t,n])=>t.toLowerCase().startsWith(q)||n.toLowerCase().includes(q)).slice(0,8)}
+function autocomplete(input,onPick){
+  const ul=input.parentNode.querySelector('ul');let items=[],idx=-1;
+  const close=()=>{ul.hidden=true;idx=-1};
+  const pick=i=>{const [t,n]=items[i];input.value=t;close();onPick(t,n)};
+  input.addEventListener('input',()=>{items=matchTk(input.value);ul.innerHTML='';if(!items.length){close();return}
+    items.forEach(([t,n],i)=>{const li=document.createElement('li');li.innerHTML=`<b>${t}</b><small>${n}</small>`;li.onmousedown=e=>{e.preventDefault();pick(i)};ul.appendChild(li)});ul.hidden=false});
+  input.addEventListener('keydown',e=>{if(ul.hidden)return;const lis=ul.children;
+    if(e.key==='ArrowDown'){idx=Math.min(idx+1,lis.length-1)}else if(e.key==='ArrowUp'){idx=Math.max(idx-1,0)}else if(e.key==='Enter'&&idx>=0){e.preventDefault();pick(idx);return}else if(e.key==='Escape'){close();return}else return;
+    [...lis].forEach((l,i)=>l.classList.toggle('on',i===idx));e.preventDefault()});
+  input.addEventListener('blur',()=>setTimeout(close,120));
+}
+const nameOf=t=>{const f=TK.find(x=>x[0]===t.toUpperCase());return f?f[1]:''};
+const priceOf=t=>{const p=PX.prices[(t||'').toUpperCase()];return p?p.close:null};
+
+/* 탭 A: 거래 목록 */
+let trades=[{name:'SPYM',q:10,bd:'',b:80,bfx:1300,sd:'',s:95,sfx:1330,fee:5000}];
+function tradeHTML(t,i){
+  return `<div class="trade"><div class="trow"><b>거래 ${i+1}</b>${trades.length>1?`<button class="x" data-del="${i}">삭제</button>`:''}</div>
+  <div class="g g4">
+   <div class="span2"><label>종목</label><div class="ac"><input data-i="${i}" data-k="name" value="${t.name}" placeholder="예: 애플, AAPL" autocomplete="off"><ul hidden></ul></div><div class="hint" data-hint="${i}">${nameOf(t.name)}</div></div>
+   <div><label>수량</label><input data-i="${i}" data-k="q" type="number" value="${t.q}"></div>
+   <div><label>수수료 합계 (원)</label><input data-i="${i}" data-k="fee" type="number" value="${t.fee}"></div>
+   <div><label>산 날</label><input data-i="${i}" data-k="bd" type="date" value="${t.bd}"></div>
+   <div><label>산 가격 ($)</label><input data-i="${i}" data-k="b" type="number" step="0.01" value="${t.b}"></div>
+   <div class="span2"><label>산 날 환율</label><input data-i="${i}" data-k="bfx" type="number" step="0.1" value="${t.bfx}"></div>
+   <div><label>판 날</label><input data-i="${i}" data-k="sd" type="date" value="${t.sd}"></div>
+   <div><label>판 가격 ($)</label><input data-i="${i}" data-k="s" type="number" step="0.01" value="${t.s}"></div>
+   <div class="span2"><label>판 날 환율</label><input data-i="${i}" data-k="sfx" type="number" step="0.1" value="${t.sfx}"></div>
+  </div></div>`;
+}
+function setField(i,k,v){trades[i][k]=v;const el=document.querySelector(`#trades input[data-i="${i}"][data-k="${k}"]`);if(el)el.value=v}
+function renderTrades(){
+  const box=$('trades');box.innerHTML=trades.map(tradeHTML).join('');
+  box.querySelectorAll('input').forEach(el=>{
+    const i=+el.dataset.i,k=el.dataset.k;
+    el.addEventListener('input',async()=>{
+      const t=trades[i];t[k]=(k==='name'||k==='bd'||k==='sd')?el.value:(+el.value||0);
+      if(k==='bd'||k==='sd'){const v=await fxOn(el.value);if(v)setField(i,k==='bd'?'bfx':'sfx',Math.round(v*10)/10)}
+      calcA();
+    });
+    if(k==='name')autocomplete(el,(tk,n)=>{trades[i].name=tk;document.querySelector(`[data-hint="${i}"]`).textContent=n;const p=priceOf(tk);if(p&&!trades[i].sd){setField(i,'s',p);if(PX.usdkrw)setField(i,'sfx',Math.round(PX.usdkrw*10)/10)}calcA()});
+  });
+  box.querySelectorAll('[data-del]').forEach(el=>el.onclick=()=>{trades.splice(+el.dataset.del,1);renderTrades()});
+  calcA();
+}
+function calcA(){
+  const gain=trades.reduce((s,t)=>s+t.q*t.s*t.sfx-t.q*t.b*t.bfx-t.fee,0);
+  const base=Math.max(0,gain-DED);
+  const t1=Math.floor(base*0.2),t2=Math.floor(t1*0.1);
+  $('rGain').textContent=won(gain);$('rBase').textContent=won(base);$('rT1').textContent=won(t1);$('rT2').textContent=won(t2);
+  $('rTax').textContent=won(t1+t2);
+  const left=DED-gain,el=$('rLeft');
+  if(left>0){el.hidden=false;el.textContent=`세금 0원. 올해 비과세 한도가 ${won(left)} 남았습니다.`}else el.hidden=true;
+}
+$('addT').onclick=()=>{trades.push({name:'',q:0,bd:'',b:0,bfx:PX.usdkrw?Math.round(PX.usdkrw*10)/10:1330,sd:'',s:0,sfx:PX.usdkrw?Math.round(PX.usdkrw*10)/10:1330,fee:0});renderTrades()};
+
+/* 탭 B: 비과세 수량 */
+autocomplete($('bTk'),(tk,n)=>{const p=priceOf(tk);$('bHint').textContent=n+(p?` · 전날 종가 $${p}`:' · 자동 가격 없음, 직접 입력');if(p)$('bNow').value=p;if(PX.usdkrw)$('bNfx').value=Math.round(PX.usdkrw*10)/10;calcB()});
+function calcB(){
+  const buy=+$('bBuy').value||0,bfx=+$('bBfx').value||0,qty=Math.max(0,+$('bQty').value||0),now=+$('bNow').value||0,nfx=+$('bNfx').value||0,fee=(+$('bFee').value||0)/100,done=+$('bDone').value||0;
+  const per=now*nfx*(1-fee)-buy*bfx*(1+fee);
+  const left=DED-done;
+  $('sPer').textContent=won(per);$('sLeft').textContent=won(Math.max(0,left));
+  let max,msg='';
+  if(per<=0){max=qty;msg='지금 팔면 1주당 손실이라 세금이 생기지 않습니다. 손실은 올해 다른 해외주식 이익과 상계됩니다.'}
+  else if(left<=0){max=0;msg='올해 비과세 한도를 이미 다 썼습니다. 더 팔면 이익의 22%가 세금입니다.'}
+  else{max=Math.min(qty,Math.floor(left/per));msg=max>=qty?'보유 수량을 전부 팔아도 한도 안입니다.':`${max}주까지 팔면 세금 0원, ${max+1}주부터 초과분에 22%가 붙습니다.`}
+  $('sMax').textContent=max.toLocaleString('ko-KR')+'주';$('sMsg').textContent=msg+' 평균 단가로 계산한 근사치입니다.';
+}
+document.querySelectorAll('#tb input').forEach(el=>{if(el.id!=='bTk')el.addEventListener('input',calcB)});
+
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));
+  $('ta').hidden=b.dataset.t!=='a';$('tb').hidden=b.dataset.t!=='b';
+});
+renderTrades();calcB();
 </script>
 </body>
 </html>
