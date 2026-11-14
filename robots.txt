@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://eddpositive.github.io/tax-calc/sitemap.xml
